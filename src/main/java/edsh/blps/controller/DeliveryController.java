@@ -66,8 +66,17 @@ public class DeliveryController {
                 .telephone(orderDTO.getUserDTO().getTelephone()).build();
         userService.save(user);
         Order order = Order.builder().way(orderDTO.getWay()).user(user).address(orderDTO.getAddress())
-                .dopInformation(dopInformation).build();
+                .dopInformation(dopInformation).status(false).build();
         orderService.save(order);
+        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+    }
+    @PostMapping(value = "/approval", produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<String> approval(@RequestBody ApprovalDTO approvalDTO) {
+        if(approvalDTO.getApproval()) {
+            Order order = orderService.findById(approvalDTO.getId());
+            order.setStatus(true);
+            orderService.save(order);
+        }
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 }

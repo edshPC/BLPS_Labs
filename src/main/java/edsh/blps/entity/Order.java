@@ -22,4 +22,5 @@ public class Order {
     private User user;
     @ManyToOne
     private DopInformation dopInformation;
+    private Boolean status;
 }
