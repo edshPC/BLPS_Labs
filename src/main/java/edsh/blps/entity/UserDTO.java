@@ -1,20 +1,13 @@
 package edsh.blps.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
-@Builder
-@Table(name = "blps_User")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    @Id
+public class UserDTO {
     private String username;
     private String telephone;
 }
-

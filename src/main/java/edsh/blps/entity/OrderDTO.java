@@ -7,14 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @Builder
-@Table(name = "blps_User")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    @Id
-    private String username;
-    private String telephone;
+public class OrderDTO {
+    private Way way;
+    private String address;
+    private UserDTO userDTO;
+    private DopInformationDTO dopInformationDTO;
 }
-

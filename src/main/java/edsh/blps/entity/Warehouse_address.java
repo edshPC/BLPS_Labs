@@ -1,7 +1,12 @@
 package edsh.blps.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Data
 @Entity
@@ -9,36 +14,12 @@ import lombok.*;
 @Table(name = "blps_Warehouse_address")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Warehouse_address {
-    @Getter
-    @Setter
+
     @Id
     String address;
     double longitude;
     double latitude;
-
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
 }

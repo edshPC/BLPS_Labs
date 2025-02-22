@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Builder
-@Table(name = "blps_DopInformational")
-@AllArgsConstructor
+@Table(name = "blps_Order")
 @NoArgsConstructor
-public class DopInformation {
+@AllArgsConstructor
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    String flat;
-    String entrance;
-    String floor;
-    String intercom_system;
-    String comment_to_the_courier;
-
+    private Way way;
+    private String address;
+    @ManyToOne
+    private User user;
+    @ManyToOne
+    private DopInformation dopInformation;
 }
