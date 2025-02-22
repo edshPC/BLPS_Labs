@@ -8,3 +8,4 @@ import java.util.List;
 public interface World_address_Repository extends JpaRepository<World_address,String> {
     List<World_address> findByAddress(String address);
 }
+

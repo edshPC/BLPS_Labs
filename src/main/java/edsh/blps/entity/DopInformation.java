@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "blps_DopInformational")
 @NoArgsConstructor
 public class DopInformation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

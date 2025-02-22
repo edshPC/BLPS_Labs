@@ -10,3 +10,4 @@ public class DopInformationDTO {
     String name_and_surname;
     int telephone;
 }
+

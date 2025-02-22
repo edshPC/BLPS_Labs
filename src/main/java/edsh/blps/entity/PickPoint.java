@@ -13,3 +13,4 @@ public class PickPoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 }
+

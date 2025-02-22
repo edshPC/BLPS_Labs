@@ -6,3 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface Warehouse_address_Repository extends JpaRepository<Warehouse_address,Long> {
 }
+

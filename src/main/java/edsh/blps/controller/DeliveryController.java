@@ -30,6 +30,7 @@ public class DeliveryController {
         this.warehouseService = warehouseService;
     }
 
+
     @GetMapping(value = "/raschit/{address}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Double> add(@PathVariable String address) {
         List<Warehouse_address> warehouse_addresses = warehouseService.get();

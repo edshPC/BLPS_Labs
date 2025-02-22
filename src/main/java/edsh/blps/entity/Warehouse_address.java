@@ -17,6 +17,7 @@ public class Warehouse_address {
     double longitude;
     double latitude;
 
+
     public String getAddress() {
         return address;
     }

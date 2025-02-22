@@ -19,3 +19,4 @@ public class WarehouseService {
         return warehouse_address_repository.findAll();
     }
 }
+

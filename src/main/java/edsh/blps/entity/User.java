@@ -12,3 +12,4 @@ public class User {
     @Id
     private String username;
 }
+

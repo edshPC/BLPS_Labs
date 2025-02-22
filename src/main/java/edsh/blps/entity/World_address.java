@@ -25,6 +25,7 @@ public class World_address {
         this.address = address;
     }
 
+
     public double getLongitude() {
         return longitude;
     }
