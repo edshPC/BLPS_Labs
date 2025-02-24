@@ -20,10 +20,7 @@ import static java.lang.Math.sqrt;
 @RequestMapping("/api/delivery")
 @RequiredArgsConstructor
 public class DeliveryController {
-    private final AddressService addressService;
-    private final WarehouseService warehouseService;
     private final OrderService orderService;
-    private final DopInformationService dopInformationService;
     private final DeliveryService deliveryService;
 
     @GetMapping("/get-all-pickpoints")
@@ -31,39 +28,26 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getAllPickPoints());
     }
 
-    @GetMapping("/raschit/{address}")
-    private ResponseEntity<Double> raschit(@PathVariable String address) {
-        List<Warehouse> warehouses = warehouseService.get();
-        Address worldAddresses = addressService.getAddress(address);
-        double min = 1000000;
-        for (Warehouse w : warehouses) {
-            System.out.println(worldAddresses.getLongitude());
-            var a = w.getAddress();
-            if(sqrt(pow(a.getLatitude()-worldAddresses.getLatitude(),2)+pow(a.getLongitude()-worldAddresses.getLongitude(),2))<min) {
-             min=sqrt(pow(a.getLatitude()-worldAddresses.getLatitude(),2)+pow(a.getLongitude()-worldAddresses.getLongitude(),2));
-            }
+    @GetMapping("/calculation/{address}")
+    private ResponseEntity<Double> calculation(@PathVariable String address) {
+        Double length = deliveryService.getMinLength(address);
+        if(length==null){
+            return new ResponseEntity<>(-1.0,
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(length * 200,
+                    HttpStatus.OK);
         }
-        return new ResponseEntity<>(min * 200, HttpStatus.CREATED);
     }
 
     @PostMapping("/create")
     private ResponseEntity<String> create(@RequestBody OrderDTO orderDTO,
                                           @AuthenticationPrincipal User user) {
-        DopInformation dopInformation = null;
-        if(orderDTO.getDopInformationDTO()!=null) {
-            dopInformation = DopInformation.builder()
-                    .floor(orderDTO.getDopInformationDTO().getFloor())
-                    .flat(orderDTO.getDopInformationDTO().getFlat())
-                    .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
-                    .entrance(orderDTO.getDopInformationDTO().getEntrance())
-                    .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
-                    .build();
-            dopInformationService.save(dopInformation);
+        if(deliveryService.createOrder(orderDTO,user)) {
+            return new ResponseEntity<>("OK", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Ошибка", HttpStatus.BAD_REQUEST);
         }
-        Order order = Order.builder().way(orderDTO.getWay()).user(user).address(orderDTO.getAddress())
-                .dopInformation(dopInformation).status(false).build();
-        orderService.save(order);
-        return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
     @PostMapping("/approval")
     private ResponseEntity<String> approval(@RequestBody ApprovalDTO approvalDTO) {
