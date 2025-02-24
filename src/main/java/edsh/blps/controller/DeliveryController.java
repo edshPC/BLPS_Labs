@@ -1,14 +1,13 @@
 package edsh.blps.controller;
 
+import edsh.blps.dto.ApprovalDTO;
+import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.*;
 import edsh.blps.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +33,6 @@ public class DeliveryController {
         this.userService = userService;
     }
 
-
     @GetMapping(value = "/raschit/{address}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Double> raschit(@PathVariable String address) {
         List<Warehouse_address> warehouse_addresses = warehouseService.get();
@@ -50,7 +48,8 @@ public class DeliveryController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseEntity<String> create(@RequestBody OrderDTO orderDTO) {
+    private ResponseEntity<String> create(@RequestBody OrderDTO orderDTO,
+                                          @AuthenticationPrincipal User user) {
         DopInformation dopInformation = null;
         if(orderDTO.getDopInformationDTO()!=null) {
             dopInformation = DopInformation.builder()
@@ -62,9 +61,6 @@ public class DeliveryController {
                     .build();
             dopInformationService.save(dopInformation);
         }
-        User user = User.builder().username(orderDTO.getUserDTO().getUsername())
-                .telephone(orderDTO.getUserDTO().getTelephone()).build();
-        userService.save(user);
         Order order = Order.builder().way(orderDTO.getWay()).user(user).address(orderDTO.getAddress())
                 .dopInformation(dopInformation).status(false).build();
         orderService.save(order);

@@ -1,6 +1,6 @@
-package edsh.blps.entity;
+package edsh.blps.dto;
 
-import jakarta.persistence.*;
+import edsh.blps.entity.Way;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,5 @@ import lombok.NoArgsConstructor;
 public class OrderDTO {
     private Way way;
     private String address;
-    private UserDTO userDTO;
     private DopInformationDTO dopInformationDTO;
 }

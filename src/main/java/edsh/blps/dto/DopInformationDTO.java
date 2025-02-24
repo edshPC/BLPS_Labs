@@ -1,4 +1,4 @@
-package edsh.blps.entity;
+package edsh.blps.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
