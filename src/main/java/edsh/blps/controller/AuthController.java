@@ -1,14 +1,14 @@
 package edsh.blps.controller;
 
 import edsh.blps.dto.UserDTO;
+import edsh.blps.entity.User;
 import edsh.blps.security.UserAuthProvider;
 import edsh.blps.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,6 +30,12 @@ public class AuthController {
         var user = userService.register(request);
         var token = userAuthProvider.createToken(user.getUsername());
         return ResponseEntity.ok(token);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuth(@AuthenticationPrincipal User user) {
+        if (user == null) return new ResponseEntity<>("Вы не авторизованы", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.ok(user.getUsername());
     }
 
 }
