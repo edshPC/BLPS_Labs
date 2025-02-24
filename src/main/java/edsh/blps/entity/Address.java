@@ -1,17 +1,19 @@
 package edsh.blps.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
-@Table(name = "blps_PickPoint")
+@Builder
+@Table(name = "blps_Address")
 @NoArgsConstructor
-public class PickPoint {
+@AllArgsConstructor
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Address address;
+    String address;
+    double longitude;
+    double latitude;
 }

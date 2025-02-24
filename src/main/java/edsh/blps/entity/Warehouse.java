@@ -11,15 +11,15 @@ import lombok.Getter;
 @Data
 @Entity
 @Builder
-@Table(name = "blps_Warehouse_address")
+@Table(name = "blps_Warehouse")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Warehouse_address {
-
+public class Warehouse {
     @Id
-    String address;
-    double longitude;
-    double latitude;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne
+    private Address address;
 }

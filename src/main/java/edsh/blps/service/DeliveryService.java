@@ -1,16 +1,20 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.Warehouse_address_Repository;
-import edsh.blps.Repository.World_address_Repository;
-import edsh.blps.entity.Warehouse_address;
-import edsh.blps.entity.World_address;
+import edsh.blps.Repository.PickPointRepository;
+import edsh.blps.entity.PickPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DeliveryService {
+    private final PickPointRepository pickPointRepository;
+
+    public List<PickPoint> getAllPickPoints() {
+        return pickPointRepository.findAll();
+    }
 
 }
 

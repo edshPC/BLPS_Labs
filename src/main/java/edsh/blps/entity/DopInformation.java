@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Builder
-@Table(name = "blps_DopInformational")
+@Table(name = "blps_DopInformation")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DopInformation {

@@ -4,8 +4,8 @@ import edsh.blps.dto.ApprovalDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.*;
 import edsh.blps.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,36 +18,35 @@ import static java.lang.Math.sqrt;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/delivery")
+@RequiredArgsConstructor
 public class DeliveryController {
-    private final WorldService worldService;
+    private final AddressService addressService;
     private final WarehouseService warehouseService;
     private final OrderService orderService;
     private final DopInformationService dopInformationService;
-    private final UserService userService;
+    private final DeliveryService deliveryService;
 
-    public DeliveryController(WorldService worldService, WarehouseService warehouseService, OrderService orderService, DopInformationService dopInformationService, UserService userService) {
-        this.worldService = worldService;
-        this.warehouseService = warehouseService;
-        this.orderService = orderService;
-        this.dopInformationService = dopInformationService;
-        this.userService = userService;
+    @GetMapping("/get-all-pickpoints")
+    public ResponseEntity<?> getAllPickPoints() {
+        return ResponseEntity.ok(deliveryService.getAllPickPoints());
     }
 
-    @GetMapping(value = "/raschit/{address}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/raschit/{address}")
     private ResponseEntity<Double> raschit(@PathVariable String address) {
-        List<Warehouse_address> warehouse_addresses = warehouseService.get();
-        World_address worldAddresses = worldService.getAddress(address);
+        List<Warehouse> warehouses = warehouseService.get();
+        Address worldAddresses = addressService.getAddress(address);
         double min = 1000000;
-        for (Warehouse_address i : warehouse_addresses) {
+        for (Warehouse w : warehouses) {
             System.out.println(worldAddresses.getLongitude());
-            if(sqrt(pow(i.getLatitude()-worldAddresses.getLatitude(),2)+pow(i.getLongitude()-worldAddresses.getLongitude(),2))<min) {
-             min=sqrt(pow(i.getLatitude()-worldAddresses.getLatitude(),2)+pow(i.getLongitude()-worldAddresses.getLongitude(),2));
+            var a = w.getAddress();
+            if(sqrt(pow(a.getLatitude()-worldAddresses.getLatitude(),2)+pow(a.getLongitude()-worldAddresses.getLongitude(),2))<min) {
+             min=sqrt(pow(a.getLatitude()-worldAddresses.getLatitude(),2)+pow(a.getLongitude()-worldAddresses.getLongitude(),2));
             }
         }
         return new ResponseEntity<>(min * 200, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/create")
     private ResponseEntity<String> create(@RequestBody OrderDTO orderDTO,
                                           @AuthenticationPrincipal User user) {
         DopInformation dopInformation = null;
@@ -66,7 +65,7 @@ public class DeliveryController {
         orderService.save(order);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
-    @PostMapping(value = "/approval", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/approval")
     private ResponseEntity<String> approval(@RequestBody ApprovalDTO approvalDTO) {
         if(approvalDTO.getApproval()) {
             Order order = orderService.findById(approvalDTO.getId());
