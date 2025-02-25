@@ -1,6 +1,8 @@
 package edsh.blps.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +18,17 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Way way;
-    private String address;
+    @NotNull
+    private DeliveryMethod deliveryMethod;
+    @ManyToOne
+    private Address address;
+    @ManyToOne
+    private PickPoint pickPoint;
+    @NotNull
     @ManyToOne
     private User user;
     @ManyToOne
     private DopInformation dopInformation;
+    @NotNull
     private Boolean status;
 }

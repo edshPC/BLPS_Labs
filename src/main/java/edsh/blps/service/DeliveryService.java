@@ -1,6 +1,6 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.PickPointRepository;
+import edsh.blps.dto.ApprovalDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -14,58 +14,57 @@ import static java.lang.Math.sqrt;
 @Service
 @RequiredArgsConstructor
 public class DeliveryService {
-    private final PickPointRepository pickPointRepository;
     private final AddressService addressService;
     private final WarehouseService warehouseService;
     private final OrderService orderService;
     private final DopInformationService dopInformationService;
+    private final PickPointService pickPointService;
 
-    public List<PickPoint> getAllPickPoints() {
-        return pickPointRepository.findAll();
-    }
-
-    public Double getMinLength(String address){
+    public Double getMinLength(String address) {
         List<Warehouse> warehouses = warehouseService.get();
         Address worldAddresses = addressService.getAddress(address);
-        if(worldAddresses!=null) {
-            double min = 1000000;
-
-            for (Warehouse w : warehouses) {
-                var a = w.getAddress();
-                if (sqrt(pow(a.getLatitude() - worldAddresses.getLatitude(), 2) + pow(a.getLongitude() - worldAddresses.getLongitude(), 2)) < min) {
-                    min = sqrt(pow(a.getLatitude() - worldAddresses.getLatitude(), 2) + pow(a.getLongitude() - worldAddresses.getLongitude(), 2));
-                }
+        if (worldAddresses == null)
+            throw new IllegalArgumentException("Address not found");
+        double min = 1000000;
+        for (Warehouse w : warehouses) {
+            var a = w.getAddress();
+            if (sqrt(pow(a.getLatitude() - worldAddresses.getLatitude(), 2) + pow(a.getLongitude() - worldAddresses.getLongitude(), 2)) < min) {
+                min = sqrt(pow(a.getLatitude() - worldAddresses.getLatitude(), 2) + pow(a.getLongitude() - worldAddresses.getLongitude(), 2));
             }
-
-            return min;
-        } else {
-            return null;
         }
+        return min;
     }
 
-    public boolean createOrder(OrderDTO orderDTO,User user){
-        try {
-            DopInformation dopInformation = null;
-            if (orderDTO.getDopInformationDTO() != null) {
-                dopInformation = DopInformation.builder()
-                        .floor(orderDTO.getDopInformationDTO().getFloor())
-                        .flat(orderDTO.getDopInformationDTO().getFlat())
-                        .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
-                        .entrance(orderDTO.getDopInformationDTO().getEntrance())
-                        .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
-                        .build();
-                dopInformationService.save(dopInformation);
-            }
-            Order order = Order.builder().way(orderDTO.getWay()).user(user).address(orderDTO.getAddress())
-                    .dopInformation(dopInformation).status(false).build();
+    public void createOrder(OrderDTO orderDTO, User user) {
+        DopInformation dopInformation = null;
+        if (orderDTO.getDopInformationDTO() != null) {
+            dopInformation = DopInformation.builder()
+                    .floor(orderDTO.getDopInformationDTO().getFloor())
+                    .flat(orderDTO.getDopInformationDTO().getFlat())
+                    .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
+                    .entrance(orderDTO.getDopInformationDTO().getEntrance())
+                    .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
+                    .build();
+            dopInformationService.save(dopInformation);
+        }
+        Order order = Order.builder()
+                .deliveryMethod(orderDTO.getDeliveryMethod())
+                .user(user)
+                .address(addressService.getAddress(orderDTO.getAddress()))
+                .dopInformation(dopInformation)
+                .status(false).build();
+        if (order.getDeliveryMethod() == DeliveryMethod.pickup) {
+            order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
+        }
+        orderService.save(order);
+    }
+
+    public void approveOrder(ApprovalDTO approvalDTO) {
+        if (approvalDTO.getApproval()) {
+            Order order = orderService.findById(approvalDTO.getId());
+            order.setStatus(true);
             orderService.save(order);
-            return true;
-        } catch (Exception e){
-            return false;
         }
     }
 
 }
-
-
-

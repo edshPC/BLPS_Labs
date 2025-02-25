@@ -1,6 +1,6 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.User_Repository;
+import edsh.blps.Repository.UserRepository;
 import edsh.blps.entity.User;
 import edsh.blps.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final User_Repository user_repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User findByUsername(String username) {
-        return user_repository.findById(username)
+        return userRepository.findById(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     public void save(User user) {
-        user_repository.save(user);
+        userRepository.save(user);
     }
 
     public User login(UserDTO request) {
@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public User register(UserDTO request) {
-        if (user_repository.existsById(request.getUsername())) {
+        if (userRepository.existsById(request.getUsername())) {
             throw new IllegalArgumentException("User already exists");
         }
         User user = User.builder()

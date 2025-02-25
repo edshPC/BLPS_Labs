@@ -1,6 +1,6 @@
 package edsh.blps.entity;
 
-public enum Way {
+public enum DeliveryMethod {
     pickup,
     courier
 }
