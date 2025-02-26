@@ -15,6 +15,7 @@ public class OrderService {
         orderRepository.save(order);
     }
     public Order findById(Long id) {
-        return orderRepository.getById(id);
+        return orderRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Order not found"));
     }
 }

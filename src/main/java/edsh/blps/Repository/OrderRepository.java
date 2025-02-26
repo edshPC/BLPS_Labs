@@ -3,6 +3,8 @@ package edsh.blps.Repository;
 import edsh.blps.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface OrderRepository extends JpaRepository<Order,Long> {
-    Order getById(Long id);
+    Optional<Order> findById(Long id);
 }
