@@ -59,7 +59,7 @@ public class DeliveryService {
             }
             Order order = Order.builder()
                     .deliveryMethod(orderDTO.getDeliveryMethod())
-                    .user(user)
+                    .username(user.getUsername())
                     .address(addressService.getAddress(orderDTO.getAddress()))
                     .dopInformation(dopInformation)
                     .status(false).build();
