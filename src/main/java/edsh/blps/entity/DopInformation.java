@@ -21,5 +21,5 @@ public class DopInformation {
     String floor;
     String intercom_system;
     String comment_to_the_courier;
-
+    Double price;
 }

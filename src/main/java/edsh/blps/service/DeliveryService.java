@@ -5,6 +5,7 @@ import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class DeliveryService {
     private final OrderService orderService;
     private final DopInformationService dopInformationService;
     private final PickPointService pickPointService;
+    private final PlatformTransactionManager transactionManager;
 
     public Double getMinLength(String address) {
         List<Warehouse> warehouses = warehouseService.get();
@@ -35,28 +37,42 @@ public class DeliveryService {
         return min;
     }
 
+    public Double calculatePrice(String address) {
+        return getMinLength(address) * 2000;
+    }
+
     public void createOrder(OrderDTO orderDTO, User user) {
-        DopInformation dopInformation = null;
-        if (orderDTO.getDopInformationDTO() != null) {
-            dopInformation = DopInformation.builder()
-                    .floor(orderDTO.getDopInformationDTO().getFloor())
-                    .flat(orderDTO.getDopInformationDTO().getFlat())
-                    .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
-                    .entrance(orderDTO.getDopInformationDTO().getEntrance())
-                    .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
-                    .build();
-            dopInformationService.save(dopInformation);
+        var status = transactionManager.getTransaction(null);
+
+        try {
+            DopInformation dopInformation = null;
+            if (orderDTO.getDopInformationDTO() != null) {
+                dopInformation = DopInformation.builder()
+                        .floor(orderDTO.getDopInformationDTO().getFloor())
+                        .flat(orderDTO.getDopInformationDTO().getFlat())
+                        .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
+                        .entrance(orderDTO.getDopInformationDTO().getEntrance())
+                        .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
+                        .price(calculatePrice(orderDTO.getAddress()))
+                        .build();
+                dopInformationService.save(dopInformation);
+            }
+            Order order = Order.builder()
+                    .deliveryMethod(orderDTO.getDeliveryMethod())
+                    .user(user)
+                    .address(addressService.getAddress(orderDTO.getAddress()))
+                    .dopInformation(dopInformation)
+                    .status(false).build();
+            if (order.getDeliveryMethod() == DeliveryMethod.pickup) {
+                order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
+            }
+            orderService.save(order);
+
+            transactionManager.commit(status);
+        } catch (RuntimeException e) {
+            transactionManager.rollback(status);
+            throw e;
         }
-        Order order = Order.builder()
-                .deliveryMethod(orderDTO.getDeliveryMethod())
-                .user(user)
-                .address(addressService.getAddress(orderDTO.getAddress()))
-                .dopInformation(dopInformation)
-                .status(false).build();
-        if (order.getDeliveryMethod() == DeliveryMethod.pickup) {
-            order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
-        }
-        orderService.save(order);
     }
 
     public void approveOrder(ApprovalDTO approvalDTO) {
