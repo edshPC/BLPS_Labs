@@ -1,5 +1,6 @@
 package edsh.blps.security;
 
+import edsh.blps.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ public class SecurityConfig {
 
     private final UserAuthEntryPoint authEntryPoint;
     private final JwtAuthFilter jwtAuthFilter;
-    private final XmlUserDetailsService userDetailsService;
+    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/delivery/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().authenticated()
                 )
-                .userDetailsService(userDetailsService)
+                .userDetailsService(userService)
                 .build();
     }
 

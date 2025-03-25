@@ -5,41 +5,45 @@ import edsh.blps.entity.User;
 import edsh.blps.dto.UserDTO;
 import edsh.blps.security.Users;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = findByUsername(username);
+        if (user == null) throw new UsernameNotFoundException(username + " not found");
+        return user;
+    }
+
+    @SneakyThrows
     public User findByUsername(String username) {
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            Users users = xmlMapper.readValue(new File("users.xml"),Users.class);
-            for (User user : users.getUsers()) {
-                if(user.getUsername().equals(username)) {
-                    return new User(user.getUsername(), user.getPassword(), user.getTelephone(), user.getRoles());
-                }
+        XmlMapper xmlMapper = new XmlMapper();
+        Users users = xmlMapper.readValue(new File("users.xml"), Users.class);
+        for (User user : users.getUser()) {
+            if(user.getUsername().equals(username)) {
+                return user;
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         return null;
     }
