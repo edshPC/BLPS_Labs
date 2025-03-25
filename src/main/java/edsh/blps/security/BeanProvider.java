@@ -1,8 +1,11 @@
 package edsh.blps.security;
 
+import jakarta.annotation.PostConstruct;
+import lombok.Setter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.PathResource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.jaas.JaasAuthenticationCallbackHandler;
 import org.springframework.security.authentication.jaas.JaasAuthenticationProvider;
@@ -10,10 +13,19 @@ import org.springframework.security.authentication.jaas.JaasNameCallbackHandler;
 import org.springframework.security.authentication.jaas.JaasPasswordCallbackHandler;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 public class BeanProvider {
+    @Setter
+    private static ApplicationContext applicationContext;
+
+    public static <T> T getBean(Class<T> clazz) {
+        return applicationContext.getBean(clazz);
+    }
+
+    public BeanProvider(ApplicationContext applicationContext) {
+        setApplicationContext(applicationContext);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

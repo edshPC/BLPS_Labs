@@ -6,6 +6,9 @@ import edsh.blps.dto.UserDTO;
 import edsh.blps.security.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationProvider authenticationProvider;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -93,11 +97,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User login(UserDTO request) {
+        var token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        authenticationProvider.authenticate(token);
         User user = findByUsername(request.getUsername());
-        if(passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return user;
-        }
-        throw new IllegalArgumentException("Wrong password");
+//        if(passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            return user;
+//        }
+//        throw new IllegalArgumentException("Wrong password");
+        return user;
     }
 
     public User register(UserDTO request) {

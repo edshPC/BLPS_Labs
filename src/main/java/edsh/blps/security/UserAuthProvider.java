@@ -38,8 +38,6 @@ public class UserAuthProvider {
         var parser = Jwts.parser().verifyWith(secretKey).build();
         var decoded = parser.parseSignedClaims(token).getPayload();
         UserDetails user = userService.loadUserByUsername(decoded.getSubject());
-        var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        authenticationProvider.authenticate(authentication);
-        return authentication;
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }
