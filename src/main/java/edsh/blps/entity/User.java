@@ -25,9 +25,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Преобразуем список строковых ролей в список GrantedAuthority
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Создаем GrantedAuthority для каждой роли
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
 

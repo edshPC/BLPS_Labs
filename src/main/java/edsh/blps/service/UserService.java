@@ -99,12 +99,7 @@ public class UserService implements UserDetailsService {
     public User login(UserDTO request) {
         var token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
         authenticationProvider.authenticate(token);
-        User user = findByUsername(request.getUsername());
-//        if(passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            return user;
-//        }
-//        throw new IllegalArgumentException("Wrong password");
-        return user;
+        return findByUsername(request.getUsername());
     }
 
     public User register(UserDTO request) {
