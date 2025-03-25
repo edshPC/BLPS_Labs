@@ -24,9 +24,7 @@ public class Order {
     private Address address;
     @ManyToOne
     private PickPoint pickPoint;
-    @NotNull
-    @ManyToOne
-    private User user;
+    private String username;
     @ManyToOne
     private DopInformation dopInformation;
     @NotNull

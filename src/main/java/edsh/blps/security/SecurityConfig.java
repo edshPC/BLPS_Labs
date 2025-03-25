@@ -20,6 +20,7 @@ public class SecurityConfig {
 
     private final UserAuthEntryPoint authEntryPoint;
     private final JwtAuthFilter jwtAuthFilter;
+    private final XmlUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,8 +39,11 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
+                        //.requestMatchers("/api/delivery/approval").hasAnyRole("ADMIN","PAY_SERVICE")
+                        //.requestMatchers("/api/delivery/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().authenticated()
                 )
+                //.userDetailsService(userDetailsService)
                 .build();
     }
 
