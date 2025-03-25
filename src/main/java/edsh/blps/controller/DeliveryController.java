@@ -1,6 +1,7 @@
 package edsh.blps.controller;
 
 import edsh.blps.dto.ApprovalDTO;
+import edsh.blps.dto.DopInformationDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.*;
 import edsh.blps.service.*;
@@ -24,21 +25,20 @@ public class DeliveryController {
     }
 
     @GetMapping("/calculation/{address}")
-    private ResponseEntity<Double> calculation(@PathVariable String address) {
-        System.out.println(address);
-        Double length = deliveryService.getMinLength(address);
-        return new ResponseEntity<>(length * 200, HttpStatus.OK);
+    private ResponseEntity<?> calculation(@PathVariable String address) {
+        Double price = deliveryService.calculatePrice(address);
+        return ResponseEntity.ok(price);
     }
 
     @PostMapping("/create")
-    private ResponseEntity<String> create(@RequestBody OrderDTO orderDTO,
-                                          @AuthenticationPrincipal User user) {
+    private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
+                                     @AuthenticationPrincipal User user) {
         deliveryService.createOrder(orderDTO, user);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 
     @PostMapping("/approval")
-    private ResponseEntity<String> approval(@RequestBody ApprovalDTO approvalDTO) {
+    private ResponseEntity<?> approval(@RequestBody ApprovalDTO approvalDTO) {
         deliveryService.approveOrder(approvalDTO);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
