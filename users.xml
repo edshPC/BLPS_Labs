@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><users>
+    <user password="$2a$10$2k.t9MQShXU7GvXzsppV0e2HL1JByjOO0Ga0exnHlN3oicLSMhDoe" telephone="+79001234567" username="test3">
+        <roles>
+            <role>USER</role>
+        </roles>
+    </user>
+    <user password="$2a$10$XitbNeM7cR5GHKWSCXa/cOhnFdiusOMdlUJCAATdLKzKS5qr0ebgC" telephone="+79001234567" username="test">
+        <roles>
+            <role>USER</role>
+        </roles>
+    </user>
+    <user password="$2a$10$RjOhO/L7PKAO9uMkL7/n6u4kdHda/s/DqrmqxhaIga25oQ.X3jKdC" telephone="+79001234567" username="test1">
+        <roles>
+            <role>USER</role>
+        </roles>
+    </user>
+<user password="$2a$10$Apq2jbo7xBq7.ePNdlPt/OaqnYw6pBeI3.ywP.pFXmDLTcTjpu5G2" telephone="+79001234567" username="test4"><roles><role>USER</role></roles></user></users>

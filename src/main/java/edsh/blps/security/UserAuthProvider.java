@@ -6,8 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -19,12 +21,13 @@ public class UserAuthProvider {
     private static final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long expiration = 1000 * 60 * 60 * 6; // 6 час
     private final UserService userService;
+    private final AuthenticationProvider authenticationProvider;
 
     public String createToken(String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         return Jwts.builder()
-                .issuer(username)
+                .subject(username)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(secretKey)
@@ -34,7 +37,7 @@ public class UserAuthProvider {
     public Authentication validateToken(String token) {
         var parser = Jwts.parser().verifyWith(secretKey).build();
         var decoded = parser.parseSignedClaims(token).getPayload();
-        User user = userService.findByUsername(decoded.getIssuer());
-        return new UsernamePasswordAuthenticationToken(user, null, null);
+        UserDetails user = userService.loadUserByUsername(decoded.getSubject());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }
