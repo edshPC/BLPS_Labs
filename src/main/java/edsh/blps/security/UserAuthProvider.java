@@ -34,16 +34,9 @@ public class UserAuthProvider {
     }
 
     public Authentication validateToken(String token) {
-        System.out.println(token);
         var parser = Jwts.parser().verifyWith(secretKey).build();
-        System.out.println(parser);
         var decoded = parser.parseSignedClaims(token).getPayload();
-        System.out.println(decoded);
-        System.out.println(decoded.getIssuer());
         UserDetails user = userDetailsService.loadUserByUsername(decoded.getIssuer());
-        System.out.println(1);
-        System.out.println(user);
-        System.out.println(2);
-        return new UsernamePasswordAuthenticationToken(user, null, null);
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }

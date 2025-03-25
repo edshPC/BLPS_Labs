@@ -1,7 +1,9 @@
 package edsh.blps.service;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import edsh.blps.entity.User;
 import edsh.blps.dto.UserDTO;
+import edsh.blps.security.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,27 +31,14 @@ public class UserService {
 
     public User findByUsername(String username) {
         try {
-            File file = new File("users.xml");
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(file);
-            document.getDocumentElement().normalize();
-
-            NodeList nodeList = document.getElementsByTagName("user");
-            for (int temp = 0; temp < nodeList.getLength(); temp++) {
-                Element element = (Element) nodeList.item(temp);
-                if (element.getAttributeNode("username").equals(username)) {
-                    String password = element.getAttribute("password");
-                    String roles = element.getAttribute("roles");
-                    String telephone = element.getAttribute("telephone");
-                    List<String> roleList = new ArrayList<>();
-                    for (String role : roles.split(",")) {
-                        roleList.add(role.trim());
-                    }
-                    return new User(username, password, telephone, roleList);
+            XmlMapper xmlMapper = new XmlMapper();
+            Users users = xmlMapper.readValue(new File("users.xml"),Users.class);
+            for (User user : users.getUsers()) {
+                if(user.getUsername().equals(username)) {
+                    return new User(user.getUsername(), user.getPassword(), user.getTelephone(), user.getRoles());
                 }
             }
-        } catch (ParserConfigurationException | IOException | SAXException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return null;
@@ -63,24 +52,30 @@ public class UserService {
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
 
-            Element root = doc.getDocumentElement();
+            if (file.exists()) {
+                doc = dBuilder.parse(file);
+                doc.getDocumentElement().normalize();
+            } else {
+                doc = dBuilder.newDocument();
+                Element rootElement = doc.createElement("users");
+                doc.appendChild(rootElement);
+            }
 
             Element userElement = doc.createElement("user");
             userElement.setAttribute("username", user.getUsername());
             userElement.setAttribute("password", user.getPassword());
+            userElement.setAttribute("telephone", user.getTelephone());
+            Element rolesElement = doc.createElement("roles");
             List<String> roles = user.getRoles();
-            StringBuilder rolesList = new StringBuilder();
-
-            for(int i=0; i<roles.size(); i++){
-                if(i!=0){
-                    rolesList.append(",");
-                }
-                rolesList.append(roles.get(i));
+            for (String role : roles) {
+                Element roleElement = doc.createElement("role");
+                roleElement.appendChild(doc.createTextNode(role));
+                rolesElement.appendChild(roleElement);
             }
-            userElement.setAttribute("roles", rolesList.toString());
+            userElement.appendChild(rolesElement);
             userElement.setAttribute("telephone",user.getTelephone());
+            doc.getDocumentElement().appendChild(userElement);
 
-            root.appendChild(userElement);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();

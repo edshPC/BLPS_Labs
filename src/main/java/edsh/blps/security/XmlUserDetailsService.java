@@ -1,5 +1,6 @@
 package edsh.blps.security;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import edsh.blps.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,9 +25,10 @@ public class XmlUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try{
-            File file = new File("users.xml");
+
+            /*File file = new File("users.xml");
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder =documentBuilderFactory.newDocumentBuilder();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(file);
             document.getDocumentElement().normalize();
             NodeList nodeList = document.getElementsByTagName("user");
@@ -43,8 +45,15 @@ public class XmlUserDetailsService implements UserDetailsService {
                     }
                     return new User(username,password,telephone,roleList);
                 }
+            }*/
+            XmlMapper xmlMapper = new XmlMapper();
+            Users users = xmlMapper.readValue(new File("users.xml"),Users.class);
+            for (User user : users.getUsers()) {
+                if(user.getUsername().equals(username)) {
+                    return new User(user.getUsername(), user.getPassword(), user.getTelephone(), user.getRoles());
+                }
             }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return null;

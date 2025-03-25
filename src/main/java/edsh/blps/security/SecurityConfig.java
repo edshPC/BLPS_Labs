@@ -39,11 +39,11 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        //.requestMatchers("/api/delivery/approval").hasAnyRole("ADMIN","PAY_SERVICE")
-                        //.requestMatchers("/api/delivery/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/api/delivery/approval").hasAnyRole("ADMIN","PAY_SERVICE")
+                        .requestMatchers("/api/delivery/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().authenticated()
                 )
-                //.userDetailsService(userDetailsService)
+                .userDetailsService(userDetailsService)
                 .build();
     }
 
