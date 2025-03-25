@@ -43,6 +43,8 @@ public class UserService implements UserDetailsService {
     @SneakyThrows
     public User findByUsername(String username) {
         XmlMapper xmlMapper = new XmlMapper();
+        File file = new File("users.xml");
+        if (!file.exists()) return null;
         Users users = xmlMapper.readValue(new File("users.xml"), Users.class);
         for (User user : users.getUser()) {
             if(user.getUsername().equals(username)) {
@@ -57,8 +59,7 @@ public class UserService implements UserDetailsService {
             File file = new File("users.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(file);
-            doc.getDocumentElement().normalize();
+            Document doc;
 
             if (file.exists()) {
                 doc = dBuilder.parse(file);
