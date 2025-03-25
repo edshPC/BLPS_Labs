@@ -26,9 +26,4 @@ public class UserAuthEntryPoint implements AuthenticationEntryPoint {
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         OBJECT_MAPPER.writeValue(response.getOutputStream(), "Вы не авторизованы: " + authException.getMessage());
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

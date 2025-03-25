@@ -4,6 +4,9 @@ import edsh.blps.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,6 +25,7 @@ public class SecurityConfig {
     private final UserAuthEntryPoint authEntryPoint;
     private final JwtAuthFilter jwtAuthFilter;
     private final UserService userService;
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,6 +50,14 @@ public class SecurityConfig {
                 )
                 .userDetailsService(userService)
                 .build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider);
+        return authenticationManagerBuilder.build();
     }
 
 }

@@ -12,4 +12,10 @@
             <role>USER</role>
         </roles>
     </user>
+    <user password="$2a$10$RjOhO/L7PKAO9uMkL7/n6u4kdHda/s/DqrmqxhaIga25oQ.X3jKdC" telephone="+79001234567"
+          username="test1">
+        <roles>
+            <role>USER</role>
+        </roles>
+    </user>
 </users>

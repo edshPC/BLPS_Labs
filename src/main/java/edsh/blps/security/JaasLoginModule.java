@@ -1,6 +1,5 @@
 package edsh.blps.security;
 
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -29,6 +28,8 @@ public class JaasLoginModule implements LoginModule {
     @Override
     public boolean login() throws LoginException {
         try {
+            subject.getPrincipals().iterator().next().getName();
+
             NameCallback nameCallback = new NameCallback("username");
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             callbackHandler.handle(new Callback[]{nameCallback, passwordCallback});
