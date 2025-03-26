@@ -1,7 +1,7 @@
 package edsh.blps.controller;
 
 import edsh.blps.dto.UserDTO;
-import edsh.blps.entity.User;
+import edsh.blps.entity.primary.User;
 import edsh.blps.security.UserAuthProvider;
 import edsh.blps.service.UserService;
 import lombok.RequiredArgsConstructor;

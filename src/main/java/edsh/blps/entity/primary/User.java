@@ -1,6 +1,5 @@
-package edsh.blps.entity;
+package edsh.blps.entity.primary;
 
-import jakarta.persistence.Entity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

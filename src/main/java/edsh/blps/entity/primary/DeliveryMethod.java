@@ -1,4 +1,4 @@
-package edsh.blps.entity;
+package edsh.blps.entity.primary;
 
 public enum DeliveryMethod {
     pickup,

@@ -15,6 +15,11 @@ public class TransactionConfig  {
     private UserTransaction userTransaction;
 
     @Bean
+    public UserTransaction userTransaction() {
+        return userTransaction;
+    }
+
+    @Bean
     public PlatformTransactionManager transactionManager() {
         JtaTransactionManager transactionManager = new JtaTransactionManager();
         transactionManager.setUserTransaction(userTransaction);

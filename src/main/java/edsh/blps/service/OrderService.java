@@ -1,7 +1,7 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.OrderRepository;
-import edsh.blps.entity.Order;
+import edsh.blps.repository.primary.OrderRepository;
+import edsh.blps.entity.primary.Order;
 import org.springframework.stereotype.Service;
 
 @Service

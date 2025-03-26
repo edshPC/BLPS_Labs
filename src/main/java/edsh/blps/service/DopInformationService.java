@@ -1,7 +1,7 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.DopInformationRepository;
-import edsh.blps.entity.DopInformation;
+import edsh.blps.repository.primary.DopInformationRepository;
+import edsh.blps.entity.primary.DopInformation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;

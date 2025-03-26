@@ -1,9 +1,8 @@
 package edsh.blps.controller;
 
 import edsh.blps.dto.ApprovalDTO;
-import edsh.blps.dto.DopInformationDTO;
 import edsh.blps.dto.OrderDTO;
-import edsh.blps.entity.*;
+import edsh.blps.entity.primary.User;
 import edsh.blps.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

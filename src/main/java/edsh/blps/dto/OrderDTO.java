@@ -1,6 +1,6 @@
 package edsh.blps.dto;
 
-import edsh.blps.entity.DeliveryMethod;
+import edsh.blps.entity.primary.DeliveryMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

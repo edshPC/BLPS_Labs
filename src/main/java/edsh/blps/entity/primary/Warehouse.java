@@ -1,4 +1,4 @@
-package edsh.blps.entity;
+package edsh.blps.entity.primary;
 
 import jakarta.persistence.*;
 import lombok.Builder;

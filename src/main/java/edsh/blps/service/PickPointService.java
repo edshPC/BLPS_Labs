@@ -1,8 +1,8 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.PickPointRepository;
-import edsh.blps.entity.Address;
-import edsh.blps.entity.PickPoint;
+import edsh.blps.repository.primary.PickPointRepository;
+import edsh.blps.entity.primary.Address;
+import edsh.blps.entity.primary.PickPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

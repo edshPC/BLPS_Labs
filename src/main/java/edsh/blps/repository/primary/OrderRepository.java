@@ -1,10 +1,12 @@
-package edsh.blps.Repository;
+package edsh.blps.repository.primary;
 
-import edsh.blps.entity.Order;
+import edsh.blps.entity.primary.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface OrderRepository extends JpaRepository<Order,Long> {
     Optional<Order> findById(Long id);
 }

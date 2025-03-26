@@ -1,7 +1,7 @@
 package edsh.blps.service;
 
-import edsh.blps.Repository.WarehouseRepository;
-import edsh.blps.entity.Warehouse;
+import edsh.blps.repository.primary.WarehouseRepository;
+import edsh.blps.entity.primary.Warehouse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

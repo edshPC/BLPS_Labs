@@ -1,9 +1,7 @@
 package edsh.blps.security;
 
-import edsh.blps.entity.User;
 import edsh.blps.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.security.auth.Subject;

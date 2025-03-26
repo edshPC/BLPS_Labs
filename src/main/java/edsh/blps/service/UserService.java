@@ -1,12 +1,11 @@
 package edsh.blps.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import edsh.blps.entity.User;
+import edsh.blps.entity.primary.User;
 import edsh.blps.dto.UserDTO;
 import edsh.blps.security.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

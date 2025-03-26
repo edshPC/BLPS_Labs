@@ -1,7 +1,7 @@
 package edsh.blps.security;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import edsh.blps.entity.User;
+import edsh.blps.entity.primary.User;
 import lombok.Data;
 
 import java.util.List;

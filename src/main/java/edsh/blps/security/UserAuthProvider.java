@@ -1,6 +1,5 @@
 package edsh.blps.security;
 
-import edsh.blps.entity.User;
 import edsh.blps.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
