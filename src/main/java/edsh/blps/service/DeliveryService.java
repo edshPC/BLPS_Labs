@@ -3,7 +3,9 @@ package edsh.blps.service;
 import edsh.blps.dto.ApprovalDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.primary.*;
+import edsh.blps.entity.secondary.Payment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -63,8 +65,8 @@ public class DeliveryService {
         if (order.getDeliveryMethod() == DeliveryMethod.pickup) {
             order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
         }
-
-        jtaConfirmService.createOrder(order);
+        Payment payment = Payment.builder().amount(1.1).paid(true).build();
+        jtaConfirmService.createOrder(order,payment);
     }
 
     public void approveOrder(ApprovalDTO approvalDTO) {
@@ -74,5 +76,10 @@ public class DeliveryService {
             orderService.save(order);
         }
     }
-
+    @EventListener
+    public void approval(Order order){
+        order.setStatus(true);
+        System.out.println("saass");
+        orderService.save(order);
+    }
 }
