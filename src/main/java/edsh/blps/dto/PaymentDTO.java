@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApprovalDTO {
-     Long id;
-     Boolean approval;
+public class PaymentDTO {
+     Long orderId;
+     Double amount;
+     Boolean success;
 }

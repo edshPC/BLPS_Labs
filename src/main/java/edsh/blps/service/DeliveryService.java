@@ -1,13 +1,15 @@
 package edsh.blps.service;
 
-import edsh.blps.dto.ApprovalDTO;
+import edsh.blps.dto.PaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.primary.*;
+import edsh.blps.entity.secondary.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -64,15 +66,21 @@ public class DeliveryService {
             order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
         }
 
-        jtaConfirmService.createOrder(order);
+        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order));
     }
 
-    public void approveOrder(ApprovalDTO approvalDTO) {
-        if (approvalDTO.getApproval()) {
-            Order order = orderService.findById(approvalDTO.getId());
-            order.setStatus(true);
-            orderService.save(order);
-        }
+    public void payForOrder(PaymentDTO paymentDTO) {
+        Payment payment = Payment.builder()
+                .amount(paymentDTO.getAmount())
+                .paid(paymentDTO.getSuccess())
+                .orderId(paymentDTO.getOrderId())
+                .build();
+        jtaConfirmService.onPaymentUpdate(payment);
+    }
+
+    public void approveOrder(Order order) {
+        order.setStatus(true);
+        orderService.save(order);
     }
 
 }
