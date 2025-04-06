@@ -7,10 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @Builder
+@Entity
 @Table(name = "blps_Payment")
-@EntityListeners(PaymentListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
@@ -19,4 +18,5 @@ public class Payment {
     Long id;
     Double amount;
     Boolean paid;
+    Long orderId;
 }

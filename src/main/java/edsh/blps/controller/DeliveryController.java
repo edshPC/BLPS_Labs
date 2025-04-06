@@ -1,6 +1,6 @@
 package edsh.blps.controller;
 
-import edsh.blps.dto.ApprovalDTO;
+import edsh.blps.dto.PaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.primary.User;
 import edsh.blps.service.*;
@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -32,13 +34,14 @@ public class DeliveryController {
     @PostMapping("/create")
     private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
                                      @AuthenticationPrincipal User user) {
+
         deliveryService.createOrder(orderDTO, user);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 
-    @PostMapping("/approval")
-    private ResponseEntity<?> approval(@RequestBody ApprovalDTO approvalDTO) {
-        deliveryService.approveOrder(approvalDTO);
-        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+    @PostMapping("/pay-for-order")
+    private ResponseEntity<?> payForOrder(@RequestBody PaymentDTO paymentDTO) {
+        deliveryService.payForOrder(paymentDTO);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }

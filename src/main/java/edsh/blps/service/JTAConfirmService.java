@@ -1,11 +1,6 @@
 package edsh.blps.service;
 
-import edsh.blps.dto.ApprovalDTO;
-import edsh.blps.dto.OrderDTO;
-import edsh.blps.entity.primary.DeliveryMethod;
-import edsh.blps.entity.primary.DopInformation;
 import edsh.blps.entity.primary.Order;
-import edsh.blps.entity.primary.User;
 import edsh.blps.entity.secondary.Payment;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -15,9 +10,13 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -25,18 +24,19 @@ public class JTAConfirmService {
     private final UserTransaction userTransaction;
     private final PlatformTransactionManager transactionManager;
     private final EntityManagerFactory primaryEntityManagerFactory;
-    private final ApplicationEventPublisher eventPublisher;
     @Setter(onMethod_ = {@Autowired, @Qualifier("secondaryEntityManagerFactory")})
     private EntityManagerFactory secondaryEntityManagerFactory;
 
+    private final ConcurrentHashMap<Long, CompletableFuture<Payment>> paymentCompletionMap = new ConcurrentHashMap<>();
+
+    @Async
     @SneakyThrows
-    public void createOrder(Order order, Payment payment) {
+    public void createOrder(Order order) {
         EntityManager primaryEntityManager = primaryEntityManagerFactory.createEntityManager();
         EntityManager secondaryEntityManager = secondaryEntityManagerFactory.createEntityManager();
 
+        var status = transactionManager.getTransaction(null);
         try {
-            userTransaction.begin();
-
             primaryEntityManager.joinTransaction();
             secondaryEntityManager.joinTransaction();
 
@@ -45,13 +45,31 @@ public class JTAConfirmService {
             }
             primaryEntityManager.persist(order);
 
+            CompletableFuture<Payment> paymentFuture = new CompletableFuture<>();
+            paymentCompletionMap.put(order.getId(), paymentFuture);
+
+            var payment = paymentFuture.get(10, TimeUnit.MINUTES);
+            if (!payment.getPaid()) throw new RuntimeException("Payment cancelled");
+
             secondaryEntityManager.persist(payment);
-            eventPublisher.publishEvent(new Order());
-            userTransaction.commit();
-        } catch (RuntimeException e) {
-            userTransaction.rollback();
+
+            order.setStatus(true);
+            primaryEntityManager.persist(order);
+
+            transactionManager.commit(status);
+        } catch (Exception e) {
+            transactionManager.rollback(status);
             throw e;
+        } finally {
+            primaryEntityManager.close();
+            secondaryEntityManager.close();
         }
+    }
+
+    public void onPaymentUpdate(Payment payment) {
+        CompletableFuture<Payment> future = paymentCompletionMap.remove(payment.getOrderId());
+        if (future == null) throw new RuntimeException("Order not found");
+        future.complete(payment);
     }
 
 }
