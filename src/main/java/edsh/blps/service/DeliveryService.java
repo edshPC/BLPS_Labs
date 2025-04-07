@@ -7,9 +7,10 @@ import edsh.blps.entity.secondary.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.*;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -44,7 +45,7 @@ public class DeliveryService {
         return getMinLength(address) * 2000;
     }
 
-    public void createOrder(OrderDTO orderDTO, User user) {
+    public Long createOrder(OrderDTO orderDTO, User user) throws InterruptedException {
         DopInformation dopInformation = null;
         if (orderDTO.getDopInformationDTO() != null) {
             dopInformation = DopInformation.builder()
@@ -65,8 +66,20 @@ public class DeliveryService {
         if (order.getDeliveryMethod() == DeliveryMethod.pickup) {
             order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
         }
+        System.out.println(order);
+        BlockingQueue<Long> dataQueue = new LinkedBlockingQueue<>();
 
-        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order));
+        CompletableFuture.runAsync(() -> {
+                jtaConfirmService.createOrder(order,dataQueue);
+        });
+        Long data = dataQueue.poll(20, TimeUnit.SECONDS); // Ожидание 5 секунд
+        if (data != null) {
+            return data;
+            //System.out.println("Полученные данные: " + data);
+        } else {
+            throw new IllegalArgumentException("Ошибка");
+            //System.out.println("Данные не были получены за отведенное время.");
+        }
     }
 
     public void payForOrder(PaymentDTO paymentDTO) {

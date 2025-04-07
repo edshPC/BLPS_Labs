@@ -33,10 +33,10 @@ public class DeliveryController {
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
-                                     @AuthenticationPrincipal User user) {
+                                     @AuthenticationPrincipal User user) throws InterruptedException {
 
-        deliveryService.createOrder(orderDTO, user);
-        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+        Long orderId = deliveryService.createOrder(orderDTO, user);
+        return new ResponseEntity<>(orderId.toString(), HttpStatus.CREATED);
     }
 
     @PostMapping("/pay-for-order")

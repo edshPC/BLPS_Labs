@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ public class JTAConfirmService {
 
     @Async
     @SneakyThrows
-    public void createOrder(Order order) {
+    public void createOrder(Order order, BlockingQueue<Long> id) {
         EntityManager primaryEntityManager = primaryEntityManagerFactory.createEntityManager();
         EntityManager secondaryEntityManager = secondaryEntityManagerFactory.createEntityManager();
 
@@ -43,7 +44,10 @@ public class JTAConfirmService {
             if (order.getDopInformation() != null) {
                 primaryEntityManager.persist(order.getDopInformation());
             }
+            System.out.println(order);
             primaryEntityManager.persist(order);
+            id.offer(order.getId());
+            System.out.println(order);
 
             CompletableFuture<Payment> paymentFuture = new CompletableFuture<>();
             paymentCompletionMap.put(order.getId(), paymentFuture);
@@ -57,6 +61,7 @@ public class JTAConfirmService {
             primaryEntityManager.persist(order);
 
             transactionManager.commit(status);
+            //return CompletableFuture.completedFuture(order.getId());
         } catch (Exception e) {
             transactionManager.rollback(status);
             throw e;
