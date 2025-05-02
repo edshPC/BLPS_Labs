@@ -4,7 +4,6 @@ import edsh.blps.entity.primary.Order;
 import edsh.blps.entity.secondary.Payment;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.transaction.UserTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -22,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class JTAConfirmService {
-    private final UserTransaction userTransaction;
     private final PlatformTransactionManager transactionManager;
     private final EntityManagerFactory primaryEntityManagerFactory;
     @Setter(onMethod_ = {@Autowired, @Qualifier("secondaryEntityManagerFactory")})
