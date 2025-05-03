@@ -19,18 +19,7 @@
 		<java.version>17</java.version>
 		<jackson.version>2.14.2</jackson.version>
 	</properties>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
