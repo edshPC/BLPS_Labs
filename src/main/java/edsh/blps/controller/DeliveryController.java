@@ -1,5 +1,6 @@
 package edsh.blps.controller;
 
+import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.dto.PaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.primary.User;
@@ -33,9 +34,8 @@ public class DeliveryController {
     @PostMapping("/create")
     private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
                                      @AuthenticationPrincipal User user) throws InterruptedException {
-
-        Long orderId = orderService.createOrder(orderDTO, user);
-        return new ResponseEntity<>(orderId.toString(), HttpStatus.CREATED);
+        NewPaymentDTO orderId = orderService.createOrder(orderDTO, user);
+        return new ResponseEntity<>(orderId, HttpStatus.CREATED);
     }
 
     @PostMapping("/pay-for-order")

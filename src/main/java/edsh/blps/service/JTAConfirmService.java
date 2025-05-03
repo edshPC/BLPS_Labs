@@ -1,5 +1,6 @@
 package edsh.blps.service;
 
+import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.entity.primary.Order;
 import edsh.blps.entity.secondary.Payment;
 import jakarta.persistence.EntityManager;
@@ -13,7 +14,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -25,12 +25,13 @@ public class JTAConfirmService {
     private final EntityManagerFactory primaryEntityManagerFactory;
     @Setter(onMethod_ = {@Autowired, @Qualifier("secondaryEntityManagerFactory")})
     private EntityManagerFactory secondaryEntityManagerFactory;
+    private final YookassaService yookassaService;
 
     private final ConcurrentHashMap<Long, CompletableFuture<Payment>> paymentCompletionMap = new ConcurrentHashMap<>();
 
     @Async
     @SneakyThrows
-    public void createOrder(Order order, BlockingQueue<Long> id) {
+    public void createOrder(Order order, CompletableFuture<NewPaymentDTO> newPaymentAwait) {
         EntityManager primaryEntityManager = primaryEntityManagerFactory.createEntityManager();
         EntityManager secondaryEntityManager = secondaryEntityManagerFactory.createEntityManager();
 
@@ -42,10 +43,11 @@ public class JTAConfirmService {
             if (order.getDopInformation() != null) {
                 primaryEntityManager.persist(order.getDopInformation());
             }
-            System.out.println(order);
             primaryEntityManager.persist(order);
-            id.offer(order.getId());
             System.out.println(order);
+
+            var newPayment = yookassaService.createNewPaymentFor(order);
+            newPaymentAwait.complete(newPayment);
 
             CompletableFuture<Payment> paymentFuture = new CompletableFuture<>();
             paymentCompletionMap.put(order.getId(), paymentFuture);
@@ -59,7 +61,6 @@ public class JTAConfirmService {
             primaryEntityManager.persist(order);
 
             transactionManager.commit(status);
-            //return CompletableFuture.completedFuture(order.getId());
         } catch (Exception e) {
             transactionManager.rollback(status);
             throw e;

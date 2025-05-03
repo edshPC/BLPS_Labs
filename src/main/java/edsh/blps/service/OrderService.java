@@ -1,5 +1,6 @@
 package edsh.blps.service;
 
+import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.dto.PaymentDTO;
 import edsh.blps.entity.primary.DeliveryMethod;
@@ -9,6 +10,7 @@ import edsh.blps.entity.secondary.Payment;
 import edsh.blps.repository.primary.OrderRepository;
 import edsh.blps.entity.primary.Order;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -35,7 +37,8 @@ public class OrderService {
                 new IllegalArgumentException("Order not found"));
     }
 
-    public Long createOrder(OrderDTO orderDTO, User user) throws InterruptedException {
+    @SneakyThrows
+    public NewPaymentDTO createOrder(OrderDTO orderDTO, User user) {
         DopInformation dopInformation = null;
         if (orderDTO.getDopInformationDTO() != null) {
             dopInformation = DopInformation.builder()
@@ -57,19 +60,12 @@ public class OrderService {
             order.setPickPoint(pickPointService.getByAddress(order.getAddress()));
         }
         System.out.println(order);
-        BlockingQueue<Long> dataQueue = new LinkedBlockingQueue<>();
 
-        CompletableFuture.runAsync(() -> {
-            jtaConfirmService.createOrder(order,dataQueue);
-        });
-        Long data = dataQueue.poll(20, TimeUnit.SECONDS); // Ожидание 5 секунд
-        if (data != null) {
-            return data;
-            //System.out.println("Полученные данные: " + data);
-        } else {
-            throw new IllegalArgumentException("Ошибка");
-            //System.out.println("Данные не были получены за отведенное время.");
-        }
+        CompletableFuture<NewPaymentDTO> newPaymentAwait = new CompletableFuture<>();
+        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order,newPaymentAwait));
+
+        NewPaymentDTO data = newPaymentAwait.get(20, TimeUnit.SECONDS); // Ожидание 5 секунд
+        return data;
     }
 
     public void payForOrder(PaymentDTO paymentDTO) {
