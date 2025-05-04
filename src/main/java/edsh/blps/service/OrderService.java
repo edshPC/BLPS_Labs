@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -74,7 +75,7 @@ public class OrderService {
                 .amount(paymentDTO.getAmount())
                 .paid(paymentDTO.getSuccess())
                 .orderId(paymentDTO.getOrderId())
-                .paymentId(paymentDTO.getPaymentId().toString())
+                .paymentId(paymentDTO.getPaymentId() != null ? paymentDTO.getPaymentId().toString() : null)
                 .build();
         jtaConfirmService.onPaymentUpdate(payment);
         System.out.println("Payment #" + paymentDTO.getOrderId() + " success: " + paymentDTO.getSuccess());
