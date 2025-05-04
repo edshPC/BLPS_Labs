@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -29,7 +28,6 @@ public class JTAConfirmService {
 
     private final ConcurrentHashMap<Long, CompletableFuture<Payment>> paymentCompletionMap = new ConcurrentHashMap<>();
 
-    @Async
     @SneakyThrows
     public void createOrder(Order order, CompletableFuture<NewPaymentDTO> newPaymentAwait) {
         EntityManager primaryEntityManager = primaryEntityManagerFactory.createEntityManager();

@@ -62,10 +62,9 @@ public class OrderService {
         System.out.println(order);
 
         CompletableFuture<NewPaymentDTO> newPaymentAwait = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order,newPaymentAwait));
+        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order, newPaymentAwait));
 
-        NewPaymentDTO data = newPaymentAwait.get(20, TimeUnit.SECONDS); // Ожидание 5 секунд
-        return data;
+        return newPaymentAwait.get(20, TimeUnit.SECONDS);
     }
 
     public void payForOrder(PaymentDTO paymentDTO) {
@@ -73,8 +72,10 @@ public class OrderService {
                 .amount(paymentDTO.getAmount())
                 .paid(paymentDTO.getSuccess())
                 .orderId(paymentDTO.getOrderId())
+                .paymentId(paymentDTO.getPaymentId().toString())
                 .build();
         jtaConfirmService.onPaymentUpdate(payment);
+        System.out.println("Payment #" + paymentDTO.getOrderId() + " success: " + paymentDTO.getSuccess());
     }
 
     public void approveOrder(Order order) {

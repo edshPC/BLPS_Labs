@@ -19,4 +19,5 @@ public class Payment {
     Double amount;
     Boolean paid;
     Long orderId;
+    String paymentId;
 }
