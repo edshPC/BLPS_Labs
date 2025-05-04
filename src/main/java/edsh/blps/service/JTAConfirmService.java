@@ -24,12 +24,11 @@ public class JTAConfirmService {
     private final EntityManagerFactory primaryEntityManagerFactory;
     @Setter(onMethod_ = {@Autowired, @Qualifier("secondaryEntityManagerFactory")})
     private EntityManagerFactory secondaryEntityManagerFactory;
-    private final YookassaService yookassaService;
 
     private final ConcurrentHashMap<Long, CompletableFuture<Payment>> paymentCompletionMap = new ConcurrentHashMap<>();
 
     @SneakyThrows
-    public void createOrder(Order order, CompletableFuture<NewPaymentDTO> newPaymentAwait) {
+    public void createOrder(Order order, CompletableFuture<Void> orderIdAwait) {
         EntityManager primaryEntityManager = primaryEntityManagerFactory.createEntityManager();
         EntityManager secondaryEntityManager = secondaryEntityManagerFactory.createEntityManager();
 
@@ -44,8 +43,7 @@ public class JTAConfirmService {
             primaryEntityManager.persist(order);
             System.out.println(order);
 
-            var newPayment = yookassaService.createNewPaymentFor(order);
-            newPaymentAwait.complete(newPayment);
+            orderIdAwait.complete(null);
 
             CompletableFuture<Payment> paymentFuture = new CompletableFuture<>();
             paymentCompletionMap.put(order.getId(), paymentFuture);

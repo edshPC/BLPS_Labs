@@ -27,6 +27,7 @@ public class OrderService {
     private final PickPointService pickPointService;
     private final JTAConfirmService jtaConfirmService;
     private final DeliveryService deliveryService;
+    private final YookassaService yookassaService;
 
     public void save(Order order) {
         orderRepository.save(order);
@@ -61,10 +62,11 @@ public class OrderService {
         }
         System.out.println(order);
 
-        CompletableFuture<NewPaymentDTO> newPaymentAwait = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order, newPaymentAwait));
+        CompletableFuture<Void> orderIdAwait = new CompletableFuture<>();
+        CompletableFuture.runAsync(() -> jtaConfirmService.createOrder(order, orderIdAwait));
+        orderIdAwait.get(20, TimeUnit.SECONDS);
 
-        return newPaymentAwait.get(20, TimeUnit.SECONDS);
+        return yookassaService.createNewPaymentFor(order);
     }
 
     public void payForOrder(PaymentDTO paymentDTO) {
