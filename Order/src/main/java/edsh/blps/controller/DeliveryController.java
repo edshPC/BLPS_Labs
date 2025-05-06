@@ -19,15 +19,15 @@ import java.util.concurrent.CompletableFuture;
 public class DeliveryController {
     private final DeliveryService deliveryService;
     private final PickPointService pickPointService;
-
+    private final MessageSender messageSender;
     @GetMapping("/get-all-pickpoints")
     public ResponseEntity<?> getAllPickPoints() {
-        return ResponseEntity.ok(pickPointService.getAllPickPoints());
+        return ResponseEntity.ok(messageSender.getAllPickPoint());
     }
 
     @GetMapping("/calculation/{address}")
     private ResponseEntity<?> calculation(@PathVariable String address) {
-        Double price = deliveryService.calculatePrice(address);
+        Double price = messageSender.sendCalculator(address);
         return ResponseEntity.ok(price);
     }
 

@@ -1,8 +1,5 @@
 package edsh.blps.entity.primary;
 
-import edsh.blps.repository.primary.OrderRepository;
-import edsh.blps.service.DeliveryService;
-import edsh.blps.service.OrderService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
