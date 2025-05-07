@@ -2,10 +2,8 @@ package edsh.blps.security;
 
 import edsh.blps.service.UserService;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,16 +13,21 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 public class UserAuthProvider {
-    private static final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long expiration = 1000 * 60 * 60 * 6; // 6 час
+    private final SecretKey secretKey;
     private final UserService userService;
-    private final AuthenticationProvider authenticationProvider;
+
+    public UserAuthProvider(UserService userService,
+                            @Value("${jwt.secret}") String secret) {
+        this.userService = userService;
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String createToken(String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
+
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(now)

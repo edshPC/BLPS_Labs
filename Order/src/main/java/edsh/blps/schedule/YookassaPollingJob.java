@@ -2,7 +2,6 @@ package edsh.blps.schedule;
 
 import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.dto.PaymentDTO;
-import edsh.blps.entity.secondary.Payment;
 import edsh.blps.service.OrderService;
 import jakarta.annotation.Resource;
 import jakarta.resource.cci.ConnectionFactory;
