@@ -1,5 +1,9 @@
 package edsh.blps.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edsh.blps.dto.AddressDTO;
+import edsh.blps.dto.PickPointDTO;
 import edsh.blps.entity.primary.PickPoint;
 import edsh.blps.service.DeliveryService;
 import edsh.blps.service.PickPointService;
@@ -20,6 +24,9 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @TransactionManagement(value= TransactionManagementType.BEAN)
@@ -35,7 +42,6 @@ public class MessageListener {
     private Queue responsePickPoint;
 
 
-
     @JmsListener(destination = "request.calculator")
     public void receiveMessage(String address) {
         System.out.println("Received message: " + address);
@@ -43,10 +49,18 @@ public class MessageListener {
         jmsTemplate.convertAndSend(responseCalculator, deliveryService.calculatePrice(address));
     }
     @JmsListener(destination = "request.PickPoint")
-    public void receiveMessage() {
+    public void receivePickPoint(String message) throws JsonProcessingException {
         //System.out.println("Received message: " + address);
         // Обработка сообщения
-        jmsTemplate.convertAndSend(responsePickPoint, pickPointService.getAllPickPoints());
+        List<PickPoint> pickPointList=  pickPointService.getAllPickPoints();
+        List<PickPointDTO> pickPointDTOS = new ArrayList<>();
+        for(PickPoint i: pickPointList){
+            pickPointDTOS.add(new PickPointDTO(i.getId(), new AddressDTO(i.getAddress().getId(),i.getAddress().getAddress(),i.getAddress().getLatitude(),i.getAddress().getLongitude())));
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(pickPointDTOS);
+        System.out.println(pickPointDTOS);
+        jmsTemplate.convertAndSend(responsePickPoint,jsonResponse);
     }
 }
 
