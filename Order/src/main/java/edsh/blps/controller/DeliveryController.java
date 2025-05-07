@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -21,7 +22,7 @@ public class DeliveryController {
     private final PickPointService pickPointService;
     private final MessageSender messageSender;
     @GetMapping("/get-all-pickpoints")
-    public ResponseEntity<?> getAllPickPoints() {
+    public ResponseEntity<?> getAllPickPoints() throws IOException {
         return ResponseEntity.ok(messageSender.getAllPickPoint());
     }
 
