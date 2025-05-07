@@ -17,6 +17,12 @@
 		<java.version>17</java.version>
 		<jackson.version>2.14.2</jackson.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>dynomake.space</id>
+			<url>https://maven.dynomake.space/releases</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -31,6 +37,23 @@
 					<artifactId>spring-boot-starter-logging</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-web-api</artifactId>
+			<version>9.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.resource</groupId>
+			<artifactId>jakarta.resource-api</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.jms</groupId>

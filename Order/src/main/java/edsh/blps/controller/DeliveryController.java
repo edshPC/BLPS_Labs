@@ -1,5 +1,6 @@
 package edsh.blps.controller;
 
+import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.dto.PaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.entity.primary.User;
@@ -20,6 +21,7 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
     private final PickPointService pickPointService;
     private final MessageSender messageSender;
+    private final OrderService orderService;
     @GetMapping("/get-all-pickpoints")
     public ResponseEntity<?> getAllPickPoints() {
         return ResponseEntity.ok(messageSender.getAllPickPoint());
@@ -34,14 +36,14 @@ public class DeliveryController {
     @PostMapping("/create")
     private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
                                      @AuthenticationPrincipal User user) throws InterruptedException {
-
-        Long orderId = deliveryService.createOrder(orderDTO, user);
-        return new ResponseEntity<>(orderId.toString(), HttpStatus.CREATED);
+        NewPaymentDTO orderId = orderService.createOrder(orderDTO, user);
+        return new ResponseEntity<>(orderId, HttpStatus.CREATED);
     }
+
 
     @PostMapping("/pay-for-order")
     private ResponseEntity<?> payForOrder(@RequestBody PaymentDTO paymentDTO) {
-        deliveryService.payForOrder(paymentDTO);
+        orderService.payForOrder(paymentDTO);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }

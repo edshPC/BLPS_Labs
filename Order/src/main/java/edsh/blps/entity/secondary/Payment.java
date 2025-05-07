@@ -6,6 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
 @Builder
 @Entity
@@ -19,4 +25,5 @@ public class Payment {
     Double amount;
     Boolean paid;
     Long orderId;
+    String paymentId;
 }

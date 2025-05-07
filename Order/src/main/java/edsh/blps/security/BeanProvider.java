@@ -1,7 +1,8 @@
 package edsh.blps.security;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Setter;
+import me.dynomake.yookassa.Yookassa;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,12 @@ public class BeanProvider {
     @Bean
     public JaasPasswordCallbackHandler jaasPasswordCallbackHandler() {
         return new JaasPasswordCallbackHandler();
+    }
+
+    @Bean
+    public Yookassa yookassa(@Value("${yookassa.shopId}") int shopId,
+                             @Value("${yookassa.shopKey}") String shopKey) {
+        return Yookassa.initialize(shopId, shopKey);
     }
 
 }

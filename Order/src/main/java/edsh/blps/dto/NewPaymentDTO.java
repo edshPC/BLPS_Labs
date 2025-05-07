@@ -9,9 +9,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentDTO {
-     Long orderId;
-     UUID paymentId;
-     Double amount;
-     Boolean success;
+public class NewPaymentDTO {
+    Long orderId;
+    Double amount;
+    UUID paymentId;
+    String paymentUrl;
 }
