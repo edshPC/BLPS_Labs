@@ -1,23 +1,12 @@
 package edsh.blps.controller;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edsh.blps.dto.PickPointDTO;
-import edsh.blps.dto.PickPointResponse;
-import edsh.blps.entity.primary.Address;
-import edsh.blps.entity.primary.PickPoint;
 import jakarta.jms.Queue;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.chat2.Chat;
-import org.jivesoftware.smack.chat2.ChatManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
