@@ -44,6 +44,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/camunda/**").permitAll()
                         .requestMatchers("/api/delivery/pay-for-order").hasAnyRole("ADMIN","PAY_SERVICE")
                         .requestMatchers("/api/delivery/**").hasAnyRole("ADMIN","USER")
                         .anyRequest().authenticated()
