@@ -20,5 +20,6 @@ public class CreateOrderTask implements JavaDelegate {
         var user = (User) delegateExecution.getVariable("user");
         var result = orderService.createOrder(orderDTO, user);
         delegateExecution.setVariable("newPayment", result);
+        delegateExecution.setVariable("link", result.getPaymentUrl());
     }
 }
