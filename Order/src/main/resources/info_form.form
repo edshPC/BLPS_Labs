@@ -1,0 +1,82 @@
+{
+  "components": [
+    {
+      "text": "# Введите информацию о доставке",
+      "type": "text",
+      "layout": {
+        "row": "Row_1gwgn6m",
+        "columns": null
+      },
+      "id": "Field_0fyfkf9"
+    },
+    {
+      "label": "address",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0wz3y1c",
+        "columns": null
+      },
+      "id": "Field_0bafkpw",
+      "key": "address"
+    },
+    {
+      "label": "flat",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_07g3xrc",
+        "columns": null
+      },
+      "id": "Field_0u7yqcl",
+      "key": "flat"
+    },
+    {
+      "label": "entrance",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1nduei6",
+        "columns": null
+      },
+      "id": "Field_0s4gpl0",
+      "key": "entrance"
+    },
+    {
+      "label": "floor",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1y0x1kw",
+        "columns": null
+      },
+      "id": "Field_0qk9xah",
+      "key": "floor"
+    },
+    {
+      "label": "intercom_system",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1h5dg16",
+        "columns": null
+      },
+      "id": "Field_0xq0n0c",
+      "key": "intercom_system"
+    },
+    {
+      "label": "comment_to_the_courier",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1iz5uc2",
+        "columns": null
+      },
+      "id": "Field_00hdhlu",
+      "key": "comment_to_the_courier"
+    }
+  ],
+  "type": "default",
+  "id": "info_form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "text": "# Выберите пункт выдачи",
+      "type": "text",
+      "layout": {
+        "row": "Row_1g2b5un",
+        "columns": null
+      },
+      "id": "Field_17wibpo"
+    },
+    {
+      "label": "Select",
+      "type": "select",
+      "layout": {
+        "row": "Row_0kua4or",
+        "columns": null
+      },
+      "id": "Field_1wiy6ma",
+      "key": "pickpoint",
+      "valuesKey": "pickpoints"
+    }
+  ],
+  "type": "default",
+  "id": "pickup_form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}
