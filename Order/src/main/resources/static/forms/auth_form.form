@@ -38,5 +38,6 @@
   },
   "executionPlatform": "Camunda Platform",
   "executionPlatformVersion": "7.23.0",
-  "schemaVersion": 18
+  "schemaVersion": 18,
+  "versionTag": "1"
 }

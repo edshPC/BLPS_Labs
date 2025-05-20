@@ -6,11 +6,11 @@ import edsh.blps.controller.MessageSender;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-public class GetPickpointsTask implements JavaDelegate {
+public class GetPickPointsTask implements JavaDelegate {
     private final ObjectMapper objectMapper;
     private final MessageSender messageSender;
 
-    public GetPickpointsTask() {
+    public GetPickPointsTask() {
         messageSender = BeanProvider.getBean(MessageSender.class);
         objectMapper = BeanProvider.getBean(ObjectMapper.class);
     }
