@@ -15,12 +15,20 @@ import me.dynomake.yookassa.model.request.PaymentRequest;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class YookassaService {
     private final Scheduler scheduler;
     @Resource(name = "eis/YookassaConnectionFactory")
     private ConnectionFactory yookassaConnectionFactory;
+
+    @SneakyThrows
+    public Payment getPayment(UUID uuid) {
+        Yookassa yookassa = (Yookassa) yookassaConnectionFactory.getConnection();
+        return yookassa.getPayment(uuid);
+    }
 
     @SneakyThrows
     public NewPaymentDTO createNewPaymentFor(Order order) {
