@@ -12,17 +12,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/delivery")
 @RequiredArgsConstructor
 public class DeliveryController {
-    private final DeliveryService deliveryService;
-    private final PickPointService pickPointService;
     private final MessageSender messageSender;
     private final OrderService orderService;
+    private final YookassaService yookassaService;
+
     @GetMapping("/get-all-pickpoints")
     public ResponseEntity<?> getAllPickPoints() throws IOException {
         return ResponseEntity.ok(messageSender.getAllPickPoint());
@@ -38,6 +37,7 @@ public class DeliveryController {
     private ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
                                      @AuthenticationPrincipal User user) throws InterruptedException {
         NewPaymentDTO orderId = orderService.createOrder(orderDTO, user);
+        yookassaService.startPaymentPolling(orderId);
         return new ResponseEntity<>(orderId, HttpStatus.CREATED);
     }
 

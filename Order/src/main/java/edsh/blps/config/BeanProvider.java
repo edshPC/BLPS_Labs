@@ -1,11 +1,14 @@
-package edsh.blps.security;
+package edsh.blps.config;
 
 import lombok.Setter;
 import me.dynomake.yookassa.Yookassa;
+import org.camunda.bpm.engine.ProcessEngine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.jaas.JaasAuthenticationCallbackHandler;
@@ -58,6 +61,15 @@ public class BeanProvider {
     public Yookassa yookassa(@Value("${yookassa.shopId}") int shopId,
                              @Value("${yookassa.shopKey}") String shopKey) {
         return Yookassa.initialize(shopId, shopKey);
+    }
+
+    @Setter
+    private ProcessEngine processEngine = null;
+
+    @Lazy @Bean
+    public ProcessEngine getProcessEngine() {
+        if (processEngine == null) throw new IllegalStateException("Process engine not initialized");
+        return processEngine;
     }
 
 }

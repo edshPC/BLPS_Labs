@@ -1,0 +1,42 @@
+{
+  "components": [
+    {
+      "text": "# Выберите способ доставки",
+      "type": "text",
+      "layout": {
+        "row": "Row_1in5ylv",
+        "columns": null
+      },
+      "id": "Field_15bx7xw"
+    },
+    {
+      "label": "Способ доставки",
+      "values": [
+        {
+          "label": "Самовывоз",
+          "value": "pickup"
+        },
+        {
+          "label": "Курьером",
+          "value": "courier"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_146bsjp",
+        "columns": null
+      },
+      "id": "Field_1aje5ja",
+      "key": "method"
+    }
+  ],
+  "type": "default",
+  "id": "method_form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

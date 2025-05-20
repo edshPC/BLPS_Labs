@@ -1,0 +1,22 @@
+{
+  "components": [
+    {
+      "text": "# Payment created.\n[Please go and pay it]({{link}})",
+      "type": "text",
+      "layout": {
+        "row": "Row_0gx34hx",
+        "columns": null
+      },
+      "id": "Field_1dh1skd"
+    }
+  ],
+  "type": "default",
+  "id": "payment_form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}
