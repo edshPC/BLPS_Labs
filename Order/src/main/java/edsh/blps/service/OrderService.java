@@ -1,5 +1,6 @@
 package edsh.blps.service;
 
+import edsh.blps.controller.MessageSender;
 import edsh.blps.dto.NewPaymentDTO;
 import edsh.blps.dto.OrderDTO;
 import edsh.blps.dto.PaymentDTO;
@@ -29,6 +30,7 @@ public class OrderService {
     private final JTAConfirmService jtaConfirmService;
     private final DeliveryService deliveryService;
     private final YookassaService yookassaService;
+    private final MessageSender messageSender;
 
     public void save(Order order) {
         orderRepository.save(order);
@@ -49,7 +51,7 @@ public class OrderService {
                     .intercom_system(orderDTO.getDopInformationDTO().getIntercom_system())
                     .entrance(orderDTO.getDopInformationDTO().getEntrance())
                     .comment_to_the_courier(orderDTO.getDopInformationDTO().getComment_to_the_courier())
-                    .price(deliveryService.calculatePrice(orderDTO.getAddress()))
+                    .price(messageSender.sendCalculator(orderDTO.getAddress()))
                     .build();
         }
         Order order = Order.builder()

@@ -206,7 +206,7 @@
       <bpmn:incoming>Flow_0bt8nek</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_0zxln38" errorRef="Error_0t6va9o" />
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_0ac9dfz" name="выбрать курьером" camunda:formKey="camunda-forms:app:method_form.form">
+    <bpmn:userTask id="Activity_0ac9dfz" name="Выбрать способ доставки" camunda:formKey="camunda-forms:app:method_form.form">
       <bpmn:extensionElements />
       <bpmn:incoming>Flow_00amoba</bpmn:incoming>
       <bpmn:outgoing>Flow_08nr2pz</bpmn:outgoing>
@@ -494,6 +494,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0xd5nio_di" bpmnElement="Activity_0ac9dfz">
         <dc:Bounds x="570" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1jivaqp_di" bpmnElement="Gateway_1jivaqp" isMarkerVisible="true">
         <dc:Bounds x="735" y="245" width="50" height="50" />
