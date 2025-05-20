@@ -22,14 +22,12 @@ public class AuthTask implements JavaDelegate {
         var username = (String) delegateExecution.getVariable("username");
         var password = (String) delegateExecution.getVariable("password");
         UserDTO userDTO = new UserDTO(username,password,null);
-        System.out.println(username +" "+ password);
         try {
             var result = userService.login(userDTO);
             delegateExecution.setVariable("auth", true);
             delegateExecution.setVariable("user", result);
         } catch (Exception e){
             delegateExecution.setVariable("auth", false);
-            delegateExecution.setVariable("user", null);
         }
     }
 }

@@ -10,6 +10,15 @@
       "id": "Field_17wibpo"
     },
     {
+      "text": "1. {{pickpoints}}\n2. {{S(pickpoints)}}\n3. {{JSON(pickpoints)}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_0y5fk4y",
+        "columns": null
+      },
+      "id": "Field_1t5wbon"
+    },
+    {
       "label": "Select",
       "type": "select",
       "layout": {
@@ -18,7 +27,7 @@
       },
       "id": "Field_1wiy6ma",
       "key": "pickpoint",
-      "valuesKey": "pickpoints"
+      "valuesExpression": "=(pickpoints)"
     }
   ],
   "type": "default",

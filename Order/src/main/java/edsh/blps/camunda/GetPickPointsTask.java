@@ -5,6 +5,8 @@ import edsh.blps.config.BeanProvider;
 import edsh.blps.controller.MessageSender;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.spin.Spin;
+import org.camunda.spin.impl.SpinListImpl;
 
 public class GetPickPointsTask implements JavaDelegate {
     private final ObjectMapper objectMapper;
@@ -19,6 +21,9 @@ public class GetPickPointsTask implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         var result = messageSender.getAllPickPoint();
         var array = result.stream().map(pick -> pick.getAddress().getAddress()).toList();
-        delegateExecution.setVariable("pickpoints", objectMapper.writeValueAsString(array));
+        var str = objectMapper.writeValueAsString(array);
+        var list = Spin.JSON(str);
+        System.out.println(list);
+        delegateExecution.setVariable("pickpoints", list);
     }
 }

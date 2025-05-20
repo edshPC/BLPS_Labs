@@ -26,19 +26,17 @@
         <bpmn:flowNodeRef>Activity_0ac9dfz</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1jivaqp</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0xy3u9f</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_0rt3yts</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_01o9utt</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_1pz31x6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0rt3yts</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:task id="Activity_1kgyu6l" name="вывод стоимости и др. информации">
       <bpmn:incoming>Flow_1mbkb4a</bpmn:incoming>
       <bpmn:outgoing>Flow_1a4tqv0</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:userTask id="Activity_1ezuwyb" name="Авторизоваться в системе">
-      <bpmn:extensionElements>
-        <camunda:formData />
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1ezuwyb" name="Авторизоваться в системе" camunda:formKey="camunda-forms:app:auth_form.form">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0jaqo2d</bpmn:incoming>
       <bpmn:outgoing>Flow_00yydaz</bpmn:outgoing>
     </bpmn:userTask>
@@ -145,7 +143,7 @@
           <bpmn:targetRef>DataStoreReference_16qvwuf</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
       </bpmn:serviceTask>
-      <bpmn:userTask id="Activity_13era3t" name="Оплата заказа" camunda:formRef="payment_form" camunda:formRefBinding="latest">
+      <bpmn:userTask id="Activity_13era3t" name="Оплата заказа" camunda:formKey="camunda-forms:app:payment_form.form">
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_05g5b8t</bpmn:incoming>
       </bpmn:userTask>
@@ -227,10 +225,8 @@
       <bpmn:incoming>Flow_0bt8nek</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_0zxln38" errorRef="Error_0t6va9o" />
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_0ac9dfz" name="выбрать курьером">
-      <bpmn:extensionElements>
-        <camunda:formData />
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_0ac9dfz" name="выбрать курьером" camunda:formKey="camunda-forms:app:method_form.form">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_00amoba</bpmn:incoming>
       <bpmn:outgoing>Flow_08nr2pz</bpmn:outgoing>
     </bpmn:userTask>
@@ -240,28 +236,17 @@
       <bpmn:outgoing>Flow_154fo6t</bpmn:outgoing>
       <bpmn:outgoing>Flow_12f4ela</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Activity_0xy3u9f" name="Введите адрес">
-      <bpmn:extensionElements>
-        <camunda:formData />
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_0xy3u9f" name="Введите адрес" camunda:formKey="camunda-forms:app:info_form.form">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_154fo6t</bpmn:incoming>
       <bpmn:outgoing>Flow_1y5dmd8</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="Activity_0rt3yts" name="введите контактную и дополнительную информацию">
-      <bpmn:extensionElements>
-        <camunda:formData />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1y5dmd8</bpmn:incoming>
-      <bpmn:outgoing>Flow_1kk79p8</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="Activity_19myg5c" name="Get PickPoints" camunda:class="edsh.blps.camunda.GetPickPointsTask">
       <bpmn:incoming>Flow_12f4ela</bpmn:incoming>
       <bpmn:outgoing>Flow_0o90ye4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_01o9utt" name="Выберите адрес из списка">
-      <bpmn:extensionElements>
-        <camunda:formData />
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_01o9utt" name="Выберите адрес из списка" camunda:formKey="camunda-forms:app:pickup_form.form">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0o90ye4</bpmn:incoming>
       <bpmn:outgoing>Flow_0dd5gta</bpmn:outgoing>
     </bpmn:userTask>
@@ -273,6 +258,10 @@
       <bpmn:incoming>Flow_0dd5gta</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_16ew0kl" />
     </bpmn:endEvent>
+    <bpmn:task id="Activity_0rt3yts" name="введите контактную и дополнительную информацию">
+      <bpmn:incoming>Flow_1y5dmd8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kk79p8</bpmn:outgoing>
+    </bpmn:task>
   </bpmn:process>
   <bpmn:escalation id="Escalation_1lhvc1i" name="Escalation_1lhvc1i" />
   <bpmn:error id="Error_0t6va9o" name="Wrong Password" errorCode="401" camunda:errorMessage="Wrong Password" />
@@ -311,17 +300,8 @@
           <dc:Bounds x="1134" y="642" width="76" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0830mpb_di" bpmnElement="Activity_19myg5c">
-        <dc:Bounds x="720" y="470" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1q9kkqo_di" bpmnElement="Activity_01o9utt">
-        <dc:Bounds x="870" y="310" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1weukez_di" bpmnElement="Event_1po2035">
-        <dc:Bounds x="1062" y="442" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0cq1pst" bpmnElement="Event_1pz31x6">
-        <dc:Bounds x="1242" y="192" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_05l8mf0_di" bpmnElement="Activity_0rt3yts">
+        <dc:Bounds x="1030" y="190" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0aakrkc_di" bpmnElement="Activity_0aakrkc" isExpanded="true">
         <dc:Bounds x="1270" y="260" width="760" height="770" />
@@ -522,8 +502,17 @@
       <bpmndi:BPMNShape id="Activity_0q7gjf1_di" bpmnElement="Activity_0xy3u9f">
         <dc:Bounds x="870" y="190" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1aki79w_di" bpmnElement="Activity_0rt3yts">
-        <dc:Bounds x="1030" y="190" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_0830mpb_di" bpmnElement="Activity_19myg5c">
+        <dc:Bounds x="720" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1q9kkqo_di" bpmnElement="Activity_01o9utt">
+        <dc:Bounds x="870" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1weukez_di" bpmnElement="Event_1po2035">
+        <dc:Bounds x="1062" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0cq1pst" bpmnElement="Event_1pz31x6">
+        <dc:Bounds x="1242" y="192" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1mbkb4a_di" bpmnElement="Flow_1mbkb4a">
         <di:waypoint x="1080" y="520" />
