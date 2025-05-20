@@ -45,12 +45,10 @@ public class YookassaService {
                         .build())
                 .build());
 
-        var newPayment = new NewPaymentDTO(order.getId(),
+        return new NewPaymentDTO(order.getId(),
                 price,
                 payment.getId(),
                 payment.getConfirmation().getConfirmationUrl());
-        startPaymentPolling(newPayment);
-        return newPayment;
     }
 
     @SneakyThrows
